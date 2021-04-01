@@ -1,21 +1,11 @@
-module.exports = function (app) {
+module.exports = function (application) {
 
-    app.get('/noticias', function (req, res) {
+    application.get('/noticias', function (req, res) {
 
-        const mysql = require('mysql');
-        const connection = mysql.createConnection({
-            host : '127.0.0.1',
-            user : 'root',
-            password : 'admin',
-            database: 'portal_noticias'
+        const connection = application.config.db();
+        const noticiasModel = application.app.models.noticiasModel;
+        noticiasModel.getNoticias(connection, function (error, result){
+            res.render("noticias/noticias", {noticias : result});
         })
-        console.log(connection)
-        connection.query('select * from tb_noticias', function (error, result){
-            res.send(result);
-            console.log(result)
-        })
-
-
-        // res.render("noticias/noticias")
     })
 }
